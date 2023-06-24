@@ -1,0 +1,11 @@
+Install HWM14
+
+- First of all, activate your tudat-bundle conda environment
+	- "conda activate tudat-bundle"
+
+- Follow isntructions from https://github.com/rilma/pyHWM14
+- It will not work and you will have to downgrade the pip version
+	- Follow isntructions https://github.com/S2E/s2e-env/issues/245
+	- Basically write the following
+	- "pip install pip==18.1"
+	- Proceed with installation and then re-upgrade pip

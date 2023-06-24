@@ -1,0 +1,20 @@
+---- Set up SSH from VS to the Uni Server
+
+1. Follow steps from 
+	https://code.visualstudio.com/docs/remote/ssh
+
+2. If error during connect follow steps from
+	https://stackoverflow.com/questions/60335069/vscode-remote-connection-error-the-process-tried-to-write-to-a-nonexistent-pipe?page=1&tab=scoredesc#tab-top
+	- Basically you need to delete the known hosts file in your pc
+	- And make sure the direction to the SSH file is there
+
+3. Success??
+
+4. Might get an error on VS not finishing the install in the server. If this is the case follow
+	https://stackoverflow.com/questions/64034813/vs-code-remote-ssh-connection-not-working
+
+5. In case that doesnt work, and the error is different look at 
+	https://github.com/microsoft/vscode-remote-release/issues/2507
+
+6. Need to add more cpu?
+	Still not sure how to do this
