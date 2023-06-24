@@ -1,4 +1,5 @@
 --- Changes for the NRLMSISE00 density
+--- Attached files have the changes already. It is possible to change the files with the ones downloaded from TUDAT if the version matches. Otherwise, add the changes in the lines said below to the specific files from TUDAT.
 
 -- tudat-bundle\tudat\src\astro\aerodynamics\nrlmsise00Atmosphere.cpp
 
