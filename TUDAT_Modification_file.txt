@@ -1,0 +1,97 @@
+--- Changes for the NRLMSISE00 density
+
+-- tudat-bundle\tudat\src\astro\aerodynamics\nrlmsise00Atmosphere.cpp
+
+Line 146
+
+//! Get the full model output
+std::pair< std::vector< double >, std::vector< double > >
+NRLMSISE00Atmosphere::getFullOutput( const double altitude, const double longitude,
+                                     const double latitude, const double time )
+{
+    // Compute the properties
+    computeProperties( altitude, longitude, latitude, time );
+    std::pair< std::vector< double >, std::vector< double >> output;
+
+    // Copy array members of struct to vectors on the pair.
+    output.first = std::vector< double >(
+                output_.d, output_.d + sizeof output_.d / sizeof output_.d[ 0 ] );
+    output.second = std::vector< double >(
+                output_.t, output_.t + sizeof output_.t / sizeof output_.t[ 0 ] );
+    return output;
+}
+
+-- tudat-bundle\tudat\include\tudat\astro\aerodynamics\nrlmsise00Atmosphere.h
+	- Lines 395
+
+    //! Get the full model output
+    /*!
+     * Gets the output directly from the model. This will return a
+     * pair of double vectors containing density and temperature
+     * values.
+    * \param altitude Altitude at which output is to be computed [m].
+    * \param longitude Longitude at which output is to be computed [rad].
+    * \param latitude Latitude at which output is to be computed [rad].
+    * \param time Time at which output is to be computed (seconds since J2000).
+    * \return Full density and temperature values
+     */
+    std::pair< std::vector< double >, std::vector< double > > getFullOutput(
+        const double altitude, const double longitude,
+        const double latitude, const double time );
+
+    //! Reset the hash key
+    /*!
+     * Resets the hash key, this allows re-computation even if the
+     * independent parameters haven't changed. Such as in the case of
+     * changes to the model.
+     */
+    void resetHashKey( )
+    {
+        hashKey_ = 0;
+    }
+
+    //! Function to get  Input data to NRLMSISE00 atmosphere model
+    /*!
+     *  Function to get input data to NRLMSISE00 atmosphere model
+     *  \return Input data to NRLMSISE00 atmosphere model
+     */
+    NRLMSISE00Input getNRLMSISE00Input( )
+    {
+        return inputData_;
+    }
+
+    //! Function to get output data
+    /*!
+     * Function to get output data for the NRLMSISE00 model
+     * Returns the outputs of the atmospheric density composition
+     * Look in the lines bellow for the full explanation
+     */
+
+    nrlmsise_output getNRLMSISE00Output()
+    {
+        return output_;
+    }
+
+
+
+-- tudat-bundle\tudatpy\tudatpy\kernel\expose_numerical_simulation\expose_environment.cpp
+	- Lines 234
+	- Look for ATMOSPHERE MODEL
+
+    /*!
+    **************   ATMOSPHERE MODEL  ******************
+    */
+
+    py::class_<ta::AtmosphereModel,
+            std::shared_ptr<ta::AtmosphereModel>>(m, "AtmosphereModel");
+
+    py::class_<ta::NRLMSISE00Atmosphere,
+            std::shared_ptr<ta::NRLMSISE00Atmosphere>,
+            ta::AtmosphereModel >(m, "NRLMSISE00Atmosphere", get_docstring("NRLMSISE00Atmosphere").c_str())
+            .def_property_readonly("density_comp", &ta::NRLMSISE00Atmosphere::getNRLMSISE00Output, get_docstring("NRLMSISE00Atmosphere.density_comp").c_str())
+            .def("density_comp_func",
+                 &ta::NRLMSISE00Atmosphere::getFullOutput,
+                 py::arg("altitude"),
+                 py::arg("longitude"),
+                 py::arg("latitude"),
+                 py::arg("time"));
